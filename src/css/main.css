@@ -74,6 +74,11 @@ td.sorted-by.desc:after {
 	content: "↓";
 }
 
+td:last-child {
+	width: 120px;
+	text-align: center;
+}
+
 div {
 
 }
@@ -92,14 +97,23 @@ button {
 	padding: 4px 8px;
 }
 
+div:after {
+	clear: both;
+	width: 1px;
+	height: 1px;
+	content: " ";
+	display: block;
+}
+
 button.more, button.create, button.delete {
 	margin: auto;
 	display: inline;
+	float: right;
 }
 
 button.delete {
 	background: crimson;
-	margin-left: 4px;
+	margin-right: 4px;
 }
 
 button.back:before {

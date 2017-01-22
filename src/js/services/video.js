@@ -48,11 +48,17 @@ define([
 	}
 
 	VideoService.prototype.updateVideo = function( data, cb ) {
+		data.title = data.title.trim();
+		data.description = data.description.trim();
+		data.url = data.url.trim();
 		var record = this.databaseManager.updateRecordInTableById( VideoService.TABLE_NAME, data.id, data );
 		cb( record );
 	}
 
 	VideoService.prototype.createVideo = function( data, cb ) {
+		data.title = data.title.trim();
+		data.description = data.description.trim();
+		data.url = data.url.trim();
 		var record = this.databaseManager.createRecordInTable( VideoService.TABLE_NAME, data );
 		this.INDEX = this.databaseManager.getIndexForTable( VideoService.TABLE_NAME );
 		cb( record );
