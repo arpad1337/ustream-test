@@ -117,7 +117,7 @@ describe('DatabaseManager', function() {
 			expect( instance.getRecordByTableAndId( 'videos', obj.id ) ).to.equal( null );
 		});
 
-		it('should return multiple instance', function() {
+		it('should return multiple instances', function() {
 			var instance = DatabaseManager.getInstance();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, video) );
@@ -131,7 +131,7 @@ describe('DatabaseManager', function() {
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[0]) );
 			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[1]) );
-			var index = instance.sortTableByNameAndProperty( 'videos', 'id' );
+			var index = instance.sortTableByNameAndProperty( 'videos', 'id' ); // reversing actual sort order
 			expect( instance.getRecordsInTableByIds('videos', index ) ).to.deep.equal([ obj2, obj ]);
 		})
 	});
