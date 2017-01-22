@@ -77,10 +77,8 @@ define([
 
 	EditVideoView.prototype.commit = function() {
 		var keys = Object.keys( this.data );
-		console.log(keys);
 		for( var i = 0; i < keys.length; i++ ) {
 			if( Util.isFieldEmpty( this.data[ keys[i] ] ) ) {
-				console.log(keys[i]);
 				this.displayError( keys[i] );
 				return;
 			}
