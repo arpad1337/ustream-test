@@ -1,12 +1,13 @@
 define([
+	'models/cached-storage'
+], function( CachedStorage ) {
 
-], function() {
-
-	function DatabaseManager( storage ) {
-		if( !storage ) {
-			throw new Error('DatabaseManager::constructor storage not defined');
+	function DatabaseManager( driver ) {
+		if( !driver ) {
+			throw new Error('DatabaseManager::constructor driver not defined');
 		}
-		this.storage = storage;
+		this.storage = new CachedStorage( driver );
+		this.storage.startPolling();
 	}
 
 	DatabaseManager.prototype.checkTable = function( tableName ) {
