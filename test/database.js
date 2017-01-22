@@ -46,9 +46,10 @@ var videosForSort = [
 describe('DatabaseManager', function() {
 	var DatabaseManager;
 	beforeEach(function(done) {
-		requirejs(['managers/database'], function( dbClass ) {
+		requirejs(['managers/database', 'models/cached-storage'], function( dbClass, CachedStorage ) {
 			DatabaseManager = dbClass;
 			global.window.localStorage.clear();
+			CachedStorage.prototype.startPolling = function() {};
 			done();
 		})
 	});
@@ -69,18 +70,20 @@ describe('DatabaseManager', function() {
 		it('should create table', function() {
 			var instance = DatabaseManager.getInstance();
 			var table = instance.createTable('videos');
-			var persistedTable = JSON.parse(window.localStorage.getItem( 'videos' ));
+			var persistedTable = JSON.parse(instance.storage.getItem( 'videos' ));
 			expect( table ).to.deep.equal( persistedTable );
 		});
 
 		it('should throw if table exists', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			expect( instance.createTable.bind( instance, 'videos' ) ).to.throw( Error );
 		});
 
 		it('should return a table by name', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var table = instance.getTableByTableName( 'videos' );
 			expect( table ).to.be.an('object');
@@ -88,6 +91,7 @@ describe('DatabaseManager', function() {
 
 		it('should persist a video instance', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			expect( video ).to.deep.equal({
@@ -102,6 +106,7 @@ describe('DatabaseManager', function() {
 
 		it('should update a video instance', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			obj.title = 'e';
@@ -111,6 +116,7 @@ describe('DatabaseManager', function() {
 
 		it('should delete a video instance', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			instance.deleteRecordFromTableById( 'videos', obj.id );
@@ -119,6 +125,7 @@ describe('DatabaseManager', function() {
 
 		it('should return multiple instances', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, video) );
@@ -128,6 +135,7 @@ describe('DatabaseManager', function() {
 
 		it('should sort', function() {
 			var instance = DatabaseManager.getInstance();
+			instance.clearDatabase();
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[0]) );
 			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[1]) );

@@ -10,6 +10,10 @@ define([
 		this.storage.startPolling();
 	}
 
+	DatabaseManager.prototype.clearDatabase = function() {
+		return this.storage.clear();
+	}
+
 	DatabaseManager.prototype.checkTable = function( tableName ) {
 		return !!this.storage.getItem( tableName );
 	}
