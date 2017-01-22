@@ -35,6 +35,14 @@ var video = {
 	url: 'd'
 };
 
+var videosForSort = [
+	{
+		title: 'a'
+	}, {
+		title: 'b'
+	}
+];
+
 describe('DatabaseManager', function() {
 	var DatabaseManager;
 	beforeEach(function(done) {
@@ -52,7 +60,7 @@ describe('DatabaseManager', function() {
 		});
 	});
 
-	describe('migration', function() {
+	describe('data handling', function() {
 		it('should check the videos table', function() {
 			var instance = DatabaseManager.getInstance();
 			expect( instance.checkTable( 'videos' ) ).to.be.equal(false);
@@ -63,6 +71,12 @@ describe('DatabaseManager', function() {
 			var table = instance.createTable('videos');
 			var persistedTable = JSON.parse(window.localStorage.getItem( 'videos' ));
 			expect( table ).to.deep.equal( persistedTable );
+		});
+
+		it('should throw if table exists', function() {
+			var instance = DatabaseManager.getInstance();
+			instance.createTable('videos');
+			expect( instance.createTable.bind( instance, 'videos' ) ).to.throw( Error );
 		});
 
 		it('should return a table by name', function() {
@@ -110,6 +124,15 @@ describe('DatabaseManager', function() {
 			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			var obj3 = instance.createRecordInTable( 'videos', Object.assign({}, video) );
 			expect([ obj, obj2, obj3 ]).to.deep.equal( instance.getRecordsInTableByIds( 'videos', [ obj.id, obj2.id, obj3.id ] ) );
+		});
+
+		it('should sort', function() {
+			var instance = DatabaseManager.getInstance();
+			instance.createTable('videos');
+			var obj = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[0]) );
+			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[1]) );
+			var index = instance.sortTableByNameAndProperty( 'videos', 'id' );
+			expect( instance.getRecordsInTableByIds('videos', index ) ).to.deep.equal([ obj2, obj ]);
 		})
 	});
 });
