@@ -131,7 +131,7 @@ describe('DatabaseManager', function() {
 			instance.createTable('videos');
 			var obj = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[0]) );
 			var obj2 = instance.createRecordInTable( 'videos', Object.assign({}, videosForSort[1]) );
-			var index = instance.sortTableByNameAndProperty( 'videos', 'id' ); // reversing actual sort order
+			var index = instance.sortTableByNameAndProperty( 'videos', 'id' ); // reverting actual sort order
 			expect( instance.getRecordsInTableByIds('videos', index ) ).to.deep.equal([ obj2, obj ]);
 		})
 	});
