@@ -17,12 +17,14 @@ define([
 		if( this.checkTable( tableName ) ) {
 			throw new Error('DatabaseManager->createTable table ' + tableName + ' exists' );
 		}
-		this.storage.setItem( tableName, JSON.stringify({
+		var table = {
 			sequence: 1,
 			records: [],
 			sortedBy: 'id',
 			order: 'asc'
-		}));
+		};
+		this.storage.setItem( tableName, JSON.stringify(table));
+		return table;
 	}
 
 	DatabaseManager.prototype.getIndexForTable = function( tableName ) {
@@ -31,8 +33,12 @@ define([
 	}
 
 	DatabaseManager.prototype.getRecordByTableAndId = function( tableName, id ) {
-		var record = this.storage.getItem( tableName + '_' + id );
-		return JSON.parse( record );
+		try {
+			var record = this.storage.getItem( tableName + '_' + id );
+			return JSON.parse( record );
+		} catch( e ) {
+			return null;
+		}
 	}
 
 	DatabaseManager.prototype.getTableByTableName = function( tableName ) {
