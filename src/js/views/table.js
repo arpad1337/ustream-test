@@ -14,25 +14,41 @@ define([
 	TableView.prototype.renderHeader = function() {
 		var self = this;
 		var thead = $("<thead>");
-		var cols = ['ID', 'Title', 'Record date', 'Create new'];
+		var cols = [{
+			title:'ID',
+			property: 'id'
+		}, {
+			title: 'Title',
+			property: 'title'
+		}, {
+			title: 'Record date',
+			property: 'recordDate'
+		}, {
+			title: 'Create new'
+		}];
 		var tr = $("<tr>");
 		cols.forEach(function( col ) {
 			var td = $("<td>");
 
-			if( col.toLowerCase() == 'create new' ) {
-				col = $('<button>').html( col );
-				col.on('click', self.createNewVideo.bind(self));
+			if( !col.property ) {
+				col.title = $('<button>').html( col.title );
+				col.title.on('click', self.createNewVideo.bind(self));
 			} else  {
-				if( self.sortedBy.toLowerCase() == col.toLowerCase().replace(' ', '') ) {
+				if( self.sortedBy == col.property ) {
 					td.addClass('sorted-by');
 					td.addClass( self.order );
 				}
+				td.on('click', self.onSortByProperty.bind( self, col.property ))
 			}
-			td.html( col );
+			td.html( col.title );
 			tr.append( td )
 		})
 		thead.html(tr);
 		return thead;
+	}
+
+	TableView.prototype.onSortByProperty = function( property ) {
+		this.delegate.sortByProperty( property );
 	}
 
 	TableView.prototype.createNewVideo = function() {
@@ -57,18 +73,21 @@ define([
 		});
 	}
 
-	TableView.prototype.onMorePressed = function() {
-		this.delegate.onMorePressed();
+	TableView.prototype.onMoreButtonPressed = function() {
+		this.delegate.onMoreButtonPressed();
 	}
 
 	TableView.prototype.render = function() {
 		this.$el.html('');
 		var table = $("<table>");
-		var moreButton = $('<button>More</button>');
-		moreButton.on('click', this.onMorePressed.bind( this ));
+		var moreButton = $('<button class="more">More</button>');
+		moreButton.on('click', this.onMoreButtonPressed.bind( this ));
 		table.append( this.renderHeader() );
 		table.append( this.renderBody() );
 		this.$el.append(table);
+		if( this.data.length == 0 ) {
+			this.$el.append($('<div class="no-videos">').html('There are no videos yet.'));
+		}
 		this.$el.append(moreButton);
 		return this.$el;
 	}

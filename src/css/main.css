@@ -7,9 +7,9 @@ body {
 
 body > main {
 	padding: 20px;
-	-webkit-box-shadow: 0px 2px 13px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: 0px 2px 13px 0px rgba(0,0,0,0.75);
-	box-shadow: 0px 2px 13px 0px rgba(0,0,0,0.75);
+	-webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.75);
+	box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.75);
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
@@ -23,5 +23,88 @@ input {
 	padding: 10px;
 	display: block;
 	margin-bottom: 10px;
-	width: 400px;
+	margin: 10px auto;
+	width: 300px;
 }
+
+thead td {
+	font-weight: bold;
+}
+
+td {
+	min-width: 20% !important;
+	padding: 4px 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+thead tr td:first-child {
+	width: 80px;
+}
+thead tr {
+	background: #999;
+}
+
+tr {
+	background: #ddd;
+}
+
+tr:hover {
+	background: #eee !important;
+}
+
+tr:nth-child(2n) {
+	background: #cecece;
+}
+
+td.sorted-by {
+	font-style: italic;
+}
+
+td.sorted-by.asc:after {
+	content: "↑";
+}
+
+td.sorted-by.desc:after {
+	content: "↓";
+}
+
+div {
+
+}
+
+button {
+	border: none;
+	background: deepskyblue;
+	-webkit-box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);
+	-moz-box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);
+	box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);
+	color: white;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	font-size: 12px;
+	padding: 4px 8px;
+}
+
+button.more, button.create, button.delete {
+	margin: auto;
+	display: inline;
+}
+
+button.delete {
+	background: crimson;
+	margin-left: 4px;
+}
+
+button.back:before {
+	content: "←"
+}
+
+div.no-videos {
+	text-align: center;
+	padding: 8px;
+}
+
+

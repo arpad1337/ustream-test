@@ -18,17 +18,10 @@ define([
 			throw new Error('DatabaseManager->createTable table ' + tableName + ' exists' );
 		}
 		this.storage.setItem( tableName, JSON.stringify({
-			sequence: 2,
-			records: [1],
+			sequence: 1,
+			records: [],
 			sortedBy: 'id',
 			order: 'asc'
-		}));
-		this.storage.setItem( tableName + '_' + 1, JSON.stringify({
-			id: 1,
-			recordDate: new Date(),
-			title: 'WHAT',
-			description: '??',
-			url: 'htto'
 		}));
 	}
 
@@ -55,6 +48,7 @@ define([
 		table.records.push( data.id );
 		this.storage.setItem( tableName, JSON.stringify( table ) );
 		this.storage.setItem( tableName + '_' + data.id, JSON.stringify( data ) );
+		table = this._performSort( tableName );
 		return data;
 	}
 
@@ -82,6 +76,31 @@ define([
 		return accumulator;
 	}
 
+	DatabaseManager.prototype._performSort = function( tableName ) {
+		var table = this.getTableByTableName( tableName );
+		var property = table.sortedBy;
+		var records = this.getRecordsInTableByIds( tableName, table.records );
+		table.records = [];
+		records = records.sort(function(a,b) {
+			if( typeof a[ property ] == 'string' ) {
+				a[property] = a[property].toLowerCase();
+			}
+			if( typeof b[ property ] == 'string' ) {
+				b[property] = b[property].toLowerCase();
+			}
+			if( table.order == 'asc' ) {
+				return a[property] < b[property] ? -1 : 1;
+			} else {
+				return a[property] < b[property] ? 1 : -1;
+			}
+		});
+		records.forEach(function(record) {
+			table.records.push( record.id );
+		});
+		this.storage.setItem( tableName, JSON.stringify( table ) );
+		return table;
+	}
+
 	DatabaseManager.prototype.sortTableByNameAndProperty = function( tableName, property ) {
 		var table = this.getTableByTableName( tableName );
 		if( property === table.sortedBy ) {
@@ -90,19 +109,8 @@ define([
 			table.order = 'asc';
 			table.sortedBy = property;
 		}
-		var records = this.getRecordsInTableByIds( table.records );
-		table.records = [];
-		records = records.sort(function(a,b) {
-			if( table.order == 'asc' ) {
-				return a[property] - b[property];
-			} else {
-				return b[property] - a[property];
-			}
-		});
-		records.forEach(function(record) {
-			table.records.push( record.id );
-		});
 		this.storage.setItem( tableName, JSON.stringify( table ) );
+		table = this._performSort( tableName );
 		return table.records;
 	}
 

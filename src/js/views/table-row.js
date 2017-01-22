@@ -10,7 +10,7 @@ define([
 
 	TableRowView.prototype.render = function() {
 		var action = $('<button>Edit</button>');
-		action.on('click', this.onEdit.bind( this ));
+		action.on('click', this.onEditButtonPressed.bind( this ));
 		this.$el.append( $("<td>").html( this.data.id ) );
 		this.$el.append( $("<td>").html( this.data.title ) );
 		this.$el.append( $("<td>").html( this.data.recordDate ) );
@@ -18,8 +18,8 @@ define([
 		return this.$el;
 	}
 
-	TableRowView.prototype.onEdit = function() {
-		this.delegate.onEdit( this.data );
+	TableRowView.prototype.onEditButtonPressed = function() {
+		this.delegate.onEditButtonPressed( this.data );
 	}
 
 	return TableRowView;

@@ -10,11 +10,9 @@ define([
 	EditVideoView
 ) {
 
-	function ApplicationController( context, videoService ) {
-		this.context = context;
+	function ApplicationController( videoService ) {
 		this.videoService = videoService;
 		this.page = 1;
-		this.displayVideos();
 	}
 
 	ApplicationController.prototype.displayVideos = function() {
@@ -41,18 +39,20 @@ define([
 		this.displayTable();
 	}
 
-	ApplicationController.prototype.onMorePressed = function() {
+	ApplicationController.prototype.onMoreButtonPressed = function() {
 		var self = this;
-		this.page++;
-		var page = this.page;
+		var page = this.page + 1;
 		self.videoService.getRecordsByPage( page, function( records ) {
+			if( records.length > 0 ) {
+				self.page++;
+			}
 			self.records = self.records.concat( records );
 			self.layout.childView.appendData( records );
 		});
 	};
 
-	ApplicationController.prototype.onEdit = function( video ) {
-		console.log('ApplicationController->onEdit');
+	ApplicationController.prototype.onEditButtonPressed = function( video ) {
+		console.log('ApplicationController->onEditButtonPressed');
 		var editVideo = new EditVideoView( this, video );
 		this.layout = new LayoutView( editVideo );
 		this.layout.render();
@@ -63,6 +63,20 @@ define([
 		var editVideo = new EditVideoView( this );
 		this.layout = new LayoutView( editVideo );
 		this.layout.render();
+	}
+
+	ApplicationController.prototype.sortByProperty = function( property ) {
+		var self = this;
+		this.videoService.sortByProperty( property, function( records ) {
+			self.page = 1;
+			self.records = records;
+			self.videoService.getSortOptions(function(sortOptions) {
+				self.sortOptions = sortOptions;
+				var tableView = new TableView( self, self.records, self.sortOptions.sortedBy, self.sortOptions.order );
+				self.layout = new LayoutView( tableView );
+				self.layout.render();
+			});
+		});
 	}
 
 	ApplicationController.prototype.onCommit = function( data ) {
@@ -83,5 +97,20 @@ define([
 		this.displayTable();
 	}
 
-	return new ApplicationController( window, VideoService.getInstance() );
+	ApplicationController.prototype.onDelete = function( id ) {
+		var self = this;
+		this.videoService.deleteVideo( id, function( records ) {
+			self.page = 1;
+			self.records = records;
+			var tableView = new TableView( self, self.records, self.sortOptions.sortedBy, self.sortOptions.order );
+			self.layout = new LayoutView( tableView );
+			self.layout.render();
+		});
+	}
+
+	ApplicationController.createController = function() {
+		return new ApplicationController( VideoService.getInstance() );
+	}
+
+	return ApplicationController;
 });

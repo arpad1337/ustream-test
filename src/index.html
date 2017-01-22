@@ -11,13 +11,16 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <h1>USTREAM Video Management</h1>
+        <h1>USTREAM Video Management App</h1>
         <main id="container">
         </main>
         <script src="js/vendor/require.js"></script>
         <script type="text/javascript">
             require(['./js/common'],function(_){
-                require(['./controllers/application']);
+                require(['./controllers/application'], function( ApplicationController ) {
+                    var app = ApplicationController.createController();
+                    app.displayVideos();
+                });
             });
         </script>
     </body>
