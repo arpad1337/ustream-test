@@ -77,8 +77,10 @@ define([
 
 	EditVideoView.prototype.commit = function() {
 		var keys = Object.keys( this.data );
+		console.log(keys);
 		for( var i = 0; i < keys.length; i++ ) {
-			if( Util.isFieldEmpty(this.data[ keys[i] ]) ) {
+			if( Util.isFieldEmpty( this.data[ keys[i] ] ) ) {
+				console.log(keys[i]);
 				this.displayError( keys[i] );
 				return;
 			}
@@ -88,7 +90,7 @@ define([
 
 	EditVideoView.prototype.displayError = function( property ) {
 		var i = 0;
-		while( i < this.inputs && this.inputs[i].property != property ) {
+		while( i < this.inputs.length && this.inputs[i].name != property ) {
 			i++;
 		}
 		alert('You must fill the "' + this.inputs[i].placeholder + '" field!');
