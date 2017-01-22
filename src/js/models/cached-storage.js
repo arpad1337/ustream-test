@@ -23,14 +23,15 @@ define([
 	}
 
 	CachedStorage.prototype.getItem = function( k ) {
-		try {
-			if( !this.database[ k ] ) {
-				this.database[ k ] = this.driver.getItem( k );
+		if( !this.database[ k ] ) {
+			var value = this.driver.getItem( k );
+			if( value ) {
+				this.database[ k ] = value;
+			} else {
+				return null;
 			}
-			return this.database[ k ];
-		} catch( e ) {
-			return null;
 		}
+		return this.database[ k ];
 	}
 
 	CachedStorage.prototype.removeItem = function( k ) {
